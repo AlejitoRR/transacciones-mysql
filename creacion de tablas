@@ -1,0 +1,7 @@
+create database trnsacciones;
+use trnsacciones;
+
+create table usuarios(cedula int primary key, nombre varchar(20), saldo int);
+
+insert into usuarios(cedula,nombre,saldo) values("123","alejito", 10000);
+insert into usuarios(cedula,nombre,saldo) values("423","camilo", 2000);
