@@ -1,0 +1,40 @@
+DROP PROCEDURE IF EXISTS nequi;
+
+DELIMITER //
+
+CREATE PROCEDURE nequi(in cantidadTransferencia int)
+BEGIN
+    DECLARE saldoCamilo INT;
+    DECLARE cantidadTransferir INT;
+    
+    
+    
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        SELECT "Error de transacción. La operación fue revertidaa.";
+        ROLLBACK;
+    END;
+    
+    
+    
+    START TRANSACTION;
+    SELECT saldo INTO saldoCamilo FROM usuarios WHERE cedula = '423';
+    SET cantidadTransferir = cantidadTransferencia;
+    
+    
+    IF saldoCamilo >= cantidadTransferir THEN
+        UPDATE usuarios SET saldo = saldo - cantidadTransferir WHERE cedula = '423';
+        UPDATE usuarios SET saldo = saldo + cantidadTransferir WHERE cedula = '123';
+        COMMIT;
+        
+        SELECT "Transferencia exitosa. Camilo ha transferido ",cantidadTransferir, " a Alejito.";
+        
+        
+    ELSE
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Error: Saldo insuficiente para realizar la transferencia.';
+    END IF;
+END;
+//
+
+
+call nequi(800);
